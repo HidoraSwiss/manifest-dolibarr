@@ -17,6 +17,6 @@ How to secure it ?
 2. Change the access right for the file /htdocs/conf/conf.php$ chmod 400  /var/www/webroot/ROOT/htdocs/conf/conf.php
 3. You can add a SSL certification to your Dolibarr, change the topology and click on SSL certificate.
 
-Contact the support for more information : https://support.hidora.com
+Contact the support for more informationor any request : https://support.hidora.com
 
 
