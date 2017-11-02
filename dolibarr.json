@@ -1,0 +1,98 @@
+{
+    "jpsVersion": "0.2",
+    "jpsType": "install",
+    "application": {
+        "id": "dolibarr",
+        "name": "Dolibarr",
+        "version": "",
+        "logo": "https://www.dolibarr.fr/images/stories/dolibarr.png",
+        "type": "php",
+        "homepage": "https://www.dolibarr.fr/",
+        "description": "Dolibarr ERP CRM is an open source, free software package for small and medium companies, foundations or freelancers. It includes different features for enterprise resource planning (ERP) and customer relationship management (CRM) but also other features for different activities.",
+        "success": "Below you will find your username and password for your Mysql (Dolibarr) and the link to install Dolibarr.</br></br> <table style='font-size:13px; border: none;'><tr><td>Admin panel URL for installation:</td><td style='padding-left: 10px;'><a href='${env.protocol}://${env.domain}/install' target='_blank'>${env.protocol}://${env.domain}/install</a></td></tr> <tr><td>Admin name MySQL:</td><td style='padding-left: 10px;'>dolibarradmin</td></tr><tr><td>Password:</td><td style='padding-left: 10px;'>${user.appPassword}</td></tr></table></br>To install correctly Dolibarr, please follow the different steps in our our <a href='https://www.hidora.com/en/blog' target='_blank'>article</a>",
+        "env": {
+            "topology": {
+                "engine": "php5.5",
+                "ssl": false,
+                "nodes": [
+                    {
+                        "cloudlets": 11,
+                        "nodeType": "apache2"
+                    },
+                    {
+                        "cloudlets": 11,
+                        "nodeType": "mysql5"
+                    }
+                ]
+            }
+        },
+        "onInstall": [
+            {
+                "deploy": {
+                    "archive": "https://www.dolibarr.fr/files/stable/standard/dolibarr-6.0.3.zip",
+                    "name": "dolibarr-6.0.3.zip,",
+                    "context": "root"
+                }
+            },
+            {
+                "createFile [cp]": "/var/www/webroot/ROOT/htdocs/conf/conf.php"
+            },
+            {
+                "replaceInFile": [
+                    {
+                        "nodeType": "apache2",
+                        "path": "/etc/php.ini",
+                        "replacements": [
+                            {
+                                "pattern": ";extension=gd.so",
+                                "replacement": "extension=gd.so"
+                            }
+                        ]
+                    },
+                    {
+                        "nodeType": "apache2",
+                        "path": "/etc/httpd/conf/httpd.conf",
+                        "replacements": [
+                            {
+                                "pattern": "/var/www/webroot/ROOT",
+                                "replacement": "/var/www/webroot/ROOT/htdocs/"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "writeFile": [
+                    {
+                        "nodeType": "apache2",
+                        "path": "/var/www/webroot/ROOT/htdocs/conf/conf.php",
+                        "body": "<?php $dolibarr_main_url_root='${env.url}ROOT/htdocs';    $dolibarr_main_document_root='/var/www/webroot/ROOT/htdocs';      $dolibarr_main_data_root='/var/www/webroot/ROOT/documents/';       $dolibarr_main_db_host='${nodes.mysql5.address}';        $dolibarr_main_db_name='dolibarr';     $dolibarr_main_prod='1';  $dolibarr_main_db_user='root';       $dolibarr_main_db_pass='${nodes.mysql5.password}';  $dolibarr_main_db_character_set='utf8'; "
+                    }
+                ]
+            },
+            {
+                "prepareSqlDatabase": [
+                    {
+                        "nodeType": "mysql5",
+                        "loginCredentials": {
+                            "user": "root",
+                            "password": "${nodes.mysql5.password}"
+                        },
+                        "newDatabaseName": "dolibarr",
+                        "newDatabaseUser": {
+                            "name": "dolibarradmin",
+                            "password": "${user.appPassword}"
+                        }
+                    }
+                ]
+            },
+            {
+                "restartNodes": [
+                    {
+                        "nodeType": "apache2"
+                    }
+                ]
+            }
+        ]
+    }
+}
