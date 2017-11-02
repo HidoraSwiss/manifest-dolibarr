@@ -14,9 +14,8 @@ How to install it correctly ?
 How to secure it ? 
 
 1. Via the dashboard, create the file “install.lock” in /var/www/webroot/ROOT/documents/.
-2. Change the access right for the file /htdocs/conf/conf.php
-$ chmod 400  /var/www/webroot/ROOT/htdocs/conf/conf.php
-3.You can add a SSL certification to your Dolibarr, change the topology and click on SSL certificate.
+2. Change the access right for the file /htdocs/conf/conf.php$ chmod 400  /var/www/webroot/ROOT/htdocs/conf/conf.php
+3. You can add a SSL certification to your Dolibarr, change the topology and click on SSL certificate.
 
 
 
